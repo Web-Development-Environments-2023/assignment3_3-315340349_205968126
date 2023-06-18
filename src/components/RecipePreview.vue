@@ -1,4 +1,4 @@
-<template>
+ש<template>
   <router-link
     :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
     class="recipe-preview"
