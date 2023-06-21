@@ -67,8 +67,8 @@
         </ul>
       </div>
     </nav>
-
-    <div class="container mt-5">
+    
+    <div class="container">
       <router-view />
     </div>
   </div>
@@ -93,6 +93,8 @@ export default {
 </script>
 
 <style>
-  
+  .container{
+    padding-top: 30px;
+  }
 </style>
 
