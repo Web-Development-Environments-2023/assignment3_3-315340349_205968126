@@ -38,6 +38,8 @@ import {
   LayoutPlugin,
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
+import { BCard } from 'bootstrap-vue'
+Vue.component('b-card', BCard)
 
 axios.interceptors.request.use(
   function(config) {
