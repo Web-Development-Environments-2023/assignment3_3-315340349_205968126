@@ -1,7 +1,7 @@
 <template>
   <b-card>
     <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview"></router-link>
-    <b-card-img v-if="image_load" :src="recipe.image" class="mask" href="#" style="background-color: hsla(0, 0%, 98%, 0.35);"/>
+    <b-card-img :src="recipe.image" class="mask" href="#" style="background-color: hsla(0, 0%, 98%, 0.35);"/>
     <b-card-title class="recipe-title">{{ title }}</b-card-title>
     <b-card-title id="title" :title="recipe.title"></b-card-title>
     <b-card-text>
@@ -11,13 +11,19 @@
         <dt>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</dt>
         <dt>{{ recipe.isWatched ? "watched" : "" }}</dt>
         <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt>
+        <!-- TODO: addFavorite --><b-button v-if="!recipe.isFavorited" @click="removeWatched(recipe.id)">favorite</b-button>       
       </b-list-group>
     </b-card-text>
   </b-card>
 </template>
 
 <script>
+import { BListGroup } from 'bootstrap-vue'
+
 export default {
+  components: {
+    BListGroup
+  },
   mounted() {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;

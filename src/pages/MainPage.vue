@@ -3,37 +3,41 @@
     <b-row>
       <b-col class="leftCol">
         <!--3 random recipes-->
-        <h1 class="title">Explore these recipes</h1>
-        <RecipePreviewList title="" class="RandomRecipes center" />
-        <button class="btn btn-primary" @click="updateRecipes">
+        <RecipePreviewList
+          ref="randomRecipe"
+          title="Explore this recipes"
+          class="RandomRecipes"
+          routeName = "/recipes/getRandoms"
+        />
+        <button @click="$refs.randomRecipe.updateRecipes()">
           New Random Recipes
         </button>
       </b-col>
       <b-col class="rightCol">
         <!--for logged in user, last watched recipes. else, login and sign-in option-->
-        <div v-show="$root.store.username">
-          <RecipePreviewList
-            title="Last Viewed Recipes"
-            class="RandomRecipes center"
-            :disabled="!$root.store.username"
-          ></RecipePreviewList>
-        </div>
-        <div v-show="!$root.store.username">
-          <LoginPage></LoginPage>
-        </div>
+        <RecipePreviewList
+          v-show="$root.store.username"
+          ref="lastViewed"
+          title="Last Viewed Recipes"
+          class="LastViewedRecipes"
+          routeName = "/users/lastWatched"
+        ></RecipePreviewList>
+        <LoginPage v-show="!$root.store.username"></LoginPage>
       </b-col>
     </b-row>
   </div>
 </template>
 
-
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
-import LoginPage from './LoginPage.vue';
+import LoginPage from "./LoginPage.vue";
 export default {
   components: {
     RecipePreviewList,
     LoginPage,
+  },
+  mounted() {
+    this.$refs.randomRecipe.updateRecipes();
   },
 };
 </script>
