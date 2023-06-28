@@ -1,45 +1,60 @@
 <template>
   <div class="container">
-    <h1 class="title">Main Page</h1>
-    <RecipePreviewList title="Randome Recipes" class="RandomRecipes center" />
-    <router-link v-if="!$root.store.username" to="/login" tag="button">You need to Login to vue this</router-link>
-    {{ !$root.store.username }}
-    <RecipePreviewList
-      title="Last Viewed Recipes"
-      :class="{
-        RandomRecipes: true,
-        blur: !$root.store.username,
-        center: true
-      }"
-      disabled
-    ></RecipePreviewList>
-    <!-- <div
-      style="position: absolute;top: 70%;left: 50%;transform: translate(-50%, -50%);"
-    >
-      Centeredasdasdad
-    </div>-->
+    <b-row>
+      <b-col class="leftCol">
+        <!--3 random recipes-->
+        <RecipePreviewList
+          ref="randomRecipe"
+          title="Explore this recipes"
+          class="RandomRecipes"
+          routeName = "/recipes/getRandoms"
+        />
+        <button @click="$refs.randomRecipe.updateRecipes()">
+          New Random Recipes
+        </button>
+      </b-col>
+      <b-col class="rightCol">
+        <!--for logged in user, last watched recipes. else, login and sign-in option-->
+        <RecipePreviewList
+          v-show="$root.store.username"
+          ref="lastViewed"
+          title="Last Viewed Recipes"
+          class="LastViewedRecipes"
+          routeName = "/users/lastWatched"
+        ></RecipePreviewList>
+        <LoginPage v-show="!$root.store.username"></LoginPage>
+      </b-col>
+    </b-row>
   </div>
 </template>
 
 <script>
 import RecipePreviewList from "../components/RecipePreviewList";
+import LoginPage from "./LoginPage.vue";
 export default {
   components: {
-    RecipePreviewList
-  }
+    RecipePreviewList,
+    LoginPage,
+  },
+  mounted() {
+    this.$refs.randomRecipe.updateRecipes();
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.RandomRecipes {
-  margin: 10px 0 10px;
-}
-.blur {
-  -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
-  filter: blur(2px);
-}
-::v-deep .blur .recipe-preview {
-  pointer-events: none;
-  cursor: default;
-}
+// .RandomRecipes {
+//   margin: 10px 0 10px;
+// }
+
+// .blur {
+//   -webkit-filter: blur(5px);
+//   /* Safari 6.0 - 9.0 */
+//   filter: blur(2px);
+// }
+
+// ::v-deep .blur .recipe-preview {
+//   pointer-events: none;
+//   cursor: default;
+// }
 </style>
