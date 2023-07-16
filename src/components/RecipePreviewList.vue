@@ -4,9 +4,9 @@
       {{ title }}:
       <slot></slot>
     </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
+    <b-row v-for="r in recipes" :key="r.id">
+      <b-col>
+        <RecipePreview class="recipePreview" :recipe="r" :title="title"/>
       </b-col>
     </b-row>
   </b-container>
@@ -23,7 +23,11 @@ export default {
     title: {
       type: String,
       required: true
-    }
+    },
+    routeName: {
+      type: String,
+      required: true
+    },
   },
   data() {
     return {
@@ -37,17 +41,17 @@ export default {
     async updateRecipes() {
       try {
         const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/random",
+          this.$root.store.server_domain + this.routeName,
           // "https://test-for-3-2.herokuapp.com/recipes/random"
         );
 
         // console.log(response);
-        const recipes = response.data.recipes;
+        const recipes = response.data;//.recipes;
         this.recipes = [];
         this.recipes.push(...recipes);
         // console.log(this.recipes);
       } catch (error) {
-        console.log(error);
+        console.log(error, this.routeName);
       }
     }
   }

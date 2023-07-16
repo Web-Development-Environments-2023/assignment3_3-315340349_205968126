@@ -1,25 +1,29 @@
-ש<template>
-  <router-link
-    :to="{ name: 'recipe', params: { recipeId: recipe.id } }"
-    class="recipe-preview"
-  >
-    <div class="recipe-body">
-      <img v-if="image_load" :src="recipe.image" class="recipe-image" />
-    </div>
-    <div class="recipe-footer">
-      <div :title="recipe.title" class="recipe-title">
-        {{ recipe.title }}
-      </div>
-      <ul class="recipe-overview">
-        <li>{{ recipe.readyInMinutes }} minutes</li>
-        <li>{{ recipe.aggregateLikes }} likes</li>
-      </ul>
-    </div>
-  </router-link>
+<template>
+  <b-card>
+    <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview"></router-link>
+    <b-card-img :src="recipe.image" class="mask" href="#" style="background-color: hsla(0, 0%, 98%, 0.35);"/>
+    <b-card-title class="recipe-title">{{ title }}</b-card-title>
+    <b-card-title id="title" :title="recipe.title"></b-card-title>
+    <b-card-text>
+      <b-list-group flush>
+        <dt>{{ recipe.readyInMinutes }} minutes</dt>
+        <dt>{{ recipe.popularity }} likes</dt>
+        <dt>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</dt>
+        <dt>{{ recipe.isWatched ? "watched" : "" }}</dt>
+        <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt>
+        <!-- TODO: addFavorite --><b-button v-if="!recipe.isFavorited" @click="removeWatched(recipe.id)">favorite</b-button>       
+      </b-list-group>
+    </b-card-text>
+  </b-card>
 </template>
 
 <script>
+import { BListGroup } from 'bootstrap-vue'
+
 export default {
+  components: {
+    BListGroup
+  },
   mounted() {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;
@@ -27,39 +31,19 @@ export default {
   },
   data() {
     return {
-      image_load: false
+      image_load: false,
     };
   },
   props: {
     recipe: {
       type: Object,
-      required: true
-    }
-
-    // id: {
-    //   type: Number,
-    //   required: true
-    // },
-    // title: {
-    //   type: String,
-    //   required: true
-    // },
-    // readyInMinutes: {
-    //   type: Number,
-    //   required: true
-    // },
-    // image: {
-    //   type: String,
-    //   required: true
-    // },
-    // aggregateLikes: {
-    //   type: Number,
-    //   required: false,
-    //   default() {
-    //     return undefined;
-    //   }
-    // }
-  }
+      required: true,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+  },
 };
 </script>
 
@@ -71,7 +55,8 @@ export default {
   position: relative;
   margin: 10px 10px;
 }
-.recipe-preview > .recipe-body {
+
+.recipe-preview>.recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
