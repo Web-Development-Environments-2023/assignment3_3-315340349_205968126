@@ -28,6 +28,11 @@ export default {
       type: String,
       required: true
     },
+    filters: {
+      type: Object,
+      default: () => ({}),
+      required: false
+    }
   },
   data() {
     return {
@@ -42,10 +47,13 @@ export default {
       try {
         const response = await this.axios.get(
           this.$root.store.server_domain + this.routeName,
+          {
+            params: this.filters
+          }
           // "https://test-for-3-2.herokuapp.com/recipes/random"
         );
-
-        // console.log(response);
+        console.log('this is the response')
+        console.log(response.data);
         const recipes = response.data;//.recipes;
         this.recipes = [];
         this.recipes.push(...recipes);
