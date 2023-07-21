@@ -10,23 +10,31 @@
           <div class="wrapped">
             <div class="mb-3">
               <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.aggregateLikes }} likes</div>
+              <div>Likes: {{ recipe.popularity }} </div>
+              <div>
+                {{ recipe.vegan ? "Vegan" : "Non-Vegan" }}
+                {{ recipe.vegetarian ? "Vegetarian" : "" }}
+                {{ recipe.glutenFree ? "Gluten Free" : "" }}
+              </div>
             </div>
             Ingredients:
             <ul>
-              <li
+              <li v-for="(i) in recipe.ingredients" :key="i.ingredient">
+                {{i.amount.metric.value}} {{ i.amount.metric.unit }} {{ i.ingredient }}
+              </li>
+              <!-- <li
                 v-for="(r, index) in recipe.extendedIngredients"
                 :key="index + '_' + r.id"
               >
                 {{ r.original }}
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="wrapped">
             Instructions:
             <ol>
-              <li v-for="s in recipe._instructions" :key="s.number">
-                {{ s.step }}
+              <li v-for="step in recipe.steps" :key="step.stepNumber">
+                {{ step.instruction }}
               </li>
             </ol>
           </div>
@@ -45,7 +53,7 @@
 export default {
   data() {
     return {
-      recipe: null
+      recipe: null,
     };
   },
   async created() {
@@ -56,13 +64,14 @@ export default {
       try {
         response = await this.axios.get(
           // "https://test-for-3-2.herokuapp.com/recipes/info",
-          this.$root.store.server_domain + "/recipes/info",
+          this.$root.store.server_domain +
+            "/recipes/getRecipeFullData/" +
+            this.$route.params.recipeId,
           {
-            params: { id: this.$route.params.recipeId }
+            params: { id: this.$route.params.recipeId },
           }
         );
-
-        // console.log("response.status", response.status);
+        console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
         console.log("error.response.status", error.response.status);
@@ -70,39 +79,66 @@ export default {
         return;
       }
 
+      console.log("response.data", response.data);
+
       let {
-        analyzedInstructions,
-        instructions,
-        extendedIngredients,
-        aggregateLikes,
+        title,
         readyInMinutes,
         image,
-        title
-      } = response.data.recipe;
+        popularity,
+        vegan,
+        vegetarian,
+        glutenFree,
+        servings,
+      } = response.data.recipeInfo;
 
-      let _instructions = analyzedInstructions
-        .map((fstep) => {
-          fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-          return fstep.steps;
-        })
-        .reduce((a, b) => [...a, ...b], []);
+      let { ingredients, steps } = response.data;
+      // let {
+      //   analyzedInstructions,
+      //   instructions,
+      //   extendedIngredients,
+      //   aggregateLikes,
+      //   readyInMinutes,
+      //   image,
+      //   title
+      // } = response.data;
+
+      // let _instructions = steps
+      //   .map((fstep) => {
+      //     fstep.steps[0].step = fstep.name + fstep.steps[0].step;
+      //     return fstep.steps;
+      //   })
+      //   .reduce((a, b) => [...a, ...b], []);
 
       let _recipe = {
-        instructions,
-        _instructions,
-        analyzedInstructions,
-        extendedIngredients,
-        aggregateLikes,
+        title,
         readyInMinutes,
         image,
-        title
+        popularity,
+        vegan,
+        vegetarian,
+        glutenFree,
+        servings,
+        ingredients,
+        steps,
       };
+
+      // let _recipe = {
+      //   instructions,
+      //   _instructions,
+      //   analyzedInstructions,
+      //   extendedIngredients,
+      //   aggregateLikes,
+      //   readyInMinutes,
+      //   image,
+      //   title
+      // };
 
       this.recipe = _recipe;
     } catch (error) {
       console.log(error);
     }
-  }
+  },
 };
 </script>
 

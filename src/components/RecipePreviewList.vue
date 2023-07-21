@@ -4,6 +4,14 @@
       {{ title }}:
       <slot></slot>
     </h3>
+    <!-- <b-card-img
+          :src="require('@/assets/recipe-book.png')"
+          class="mask"
+          href="#"
+          style="background-color: hsla(0, 0%, 98%, 0.35);"
+          @click="openRecipe(recipe.id)"
+        /> -->
+    <!-- TODO: uncomment this -->
     <b-row v-for="r in recipes" :key="r.id">
       <b-col>
         <RecipePreview class="recipePreview" :recipe="r" :title="title"/>
@@ -17,44 +25,61 @@ import RecipePreview from "./RecipePreview.vue";
 export default {
   name: "RecipePreviewList",
   components: {
-    RecipePreview
+    // TODO: uncomment this
+    RecipePreview,
   },
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
+    // TOO: uncomment this
     routeName: {
       type: String,
-      required: true
+      required: true,
     },
   },
   data() {
     return {
-      recipes: []
+      recipes: [],
     };
   },
   mounted() {
     this.updateRecipes();
   },
   methods: {
+    //TODO: uncomment this
     async updateRecipes() {
       try {
         const response = await this.axios.get(
-          this.$root.store.server_domain + this.routeName,
+          this.$root.store.server_domain + this.routeName
           // "https://test-for-3-2.herokuapp.com/recipes/random"
         );
 
         // console.log(response);
-        const recipes = response.data;//.recipes;
+        const recipes = response.data; //.recipes;
         this.recipes = [];
         this.recipes.push(...recipes);
         // console.log(this.recipes);
       } catch (error) {
-        console.log(error, this.routeName);
+        console.log(error, this.$root.store.server_domain, this.routeName);
       }
-    }
-  }
+    },
+    //TODO: remove this
+    // async openRecipe(recipeId) {
+    //   try {
+    //     // TODO: updateLastWatchedRecipes
+    //     // if (!this.recipe.isWatched){
+    //     //   this.updateLastWatchedRecipes(recipeId);
+    //     // }
+    //     // Use router.push to navigate to the RecipeViewPage
+    //     this.$router.push({ name: 'recipe', params: { recipeId : recipeId } });
+    //     this.$forceUpdate();
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // },
+  },
 };
 </script>
 

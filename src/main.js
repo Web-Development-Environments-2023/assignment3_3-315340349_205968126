@@ -2,10 +2,12 @@ import Vue from "vue";
 import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
+// import VueCookies from "vue-cookies";
 
 import routes from "./routes";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);
+// Vue.use(VueCookies);
 const router = new VueRouter({
   routes,
 });
@@ -40,6 +42,7 @@ import {
 Vue.use(Vuelidate);
 import { BCard } from 'bootstrap-vue'
 Vue.component('b-card', BCard)
+
 
 axios.interceptors.request.use(
   function(config) {
@@ -106,3 +109,5 @@ new Vue({
   },
   render: (h) => h(App),
 }).$mount("#app");
+
+// axios.defaults.withCredentials=true;

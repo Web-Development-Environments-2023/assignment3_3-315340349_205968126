@@ -1,8 +1,20 @@
 <template>
   <b-card>
-    <router-link :to="{ name: 'recipe', params: { recipeId: recipe.id } }" class="recipe-preview"></router-link>
-    <b-card-img :src="recipe.image" class="mask" href="#" style="background-color: hsla(0, 0%, 98%, 0.35);"/>
-    <b-card-title class="recipe-title">{{ title }}</b-card-title>
+    <router-link
+      :to="{
+        name: 'recipe',
+        params: { recipeId: recipe.id, route_name: this.route_name },
+      }"
+      class="recipe-preview"
+    ></router-link>
+    <b-card-img
+      :src="recipe.image"
+      class="mask"
+      href="#"
+      style="background-color: hsla(0, 0%, 98%, 0.35);"
+      @click=openRecipe(recipe.id);
+    />
+    <!-- <b-card-title class="recipe-title">{{ title }}</b-card-title> -->
     <b-card-title id="title" :title="recipe.title"></b-card-title>
     <b-card-text>
       <b-list-group flush>
@@ -10,24 +22,43 @@
         <dt>{{ recipe.popularity }} likes</dt>
         <dt>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</dt>
         <dt>{{ recipe.isWatched ? "watched" : "" }}</dt>
-        <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt>
-        <!-- TODO: addFavorite --><b-button v-if="!recipe.isFavorited" @click="removeWatched(recipe.id)">favorite</b-button>       
+        <!-- <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt> -->
+        <!-- TODO: addFavorite -->
+        <dt
+          v-if="
+            !recipe.isFavorited &&
+              $root.store.username &&
+              this.route_name != '/users/myRecipes' &&
+              this.route_name != '/users/familyRecipes'
+          "
+        >
+          <b-button ref="favoriteButton" @click="addToFavorites(recipe.id)"
+            >favorite</b-button
+          >
+        </dt>
+        <dt v-if="recipe.isFavorited &&
+              $root.store.username &&
+              this.route_name != '/users/myRecipes' &&
+              this.route_name != '/users/familyRecipes'">
+          favorite
+        </dt>
       </b-list-group>
     </b-card-text>
   </b-card>
 </template>
 
 <script>
-import { BListGroup } from 'bootstrap-vue'
+import { BListGroup } from "bootstrap-vue";
 
 export default {
   components: {
-    BListGroup
+    BListGroup,
   },
   mounted() {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;
     });
+    if (this.$root.store.username){}
   },
   data() {
     return {
@@ -39,11 +70,61 @@ export default {
       type: Object,
       required: true,
     },
-    title: {
+    route_name: {
       type: String,
-      required: true,
+      required: false,
     },
   },
+  methods: {
+    async addToFavorites(recipeId) {
+      try {
+        const response = await this.axios.post(
+          this.$root.store.server_domain + "/users/favorites",
+          {
+            recipe_id: recipeId,
+          }
+        );
+        console.log(response);
+        this.recipe.isFavorited = true;
+        this.$forceUpdate();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async updateLastWatchedRecipes(recipeId) {
+      try {
+        const response = await this.axios.post(
+          this.$root.store.server_domain + "/users/updateLastWatched",
+          {
+            recipe_id: recipeId,
+          }
+        );
+        console.log("updateLastWatchedRecipes", this.recipe.isWatched, response);
+        this.recipe.isWatched = true;
+        this.$forceUpdate();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async openRecipe(recipeId) {
+      try {
+        // TODO: updateLastWatchedRecipes
+        // if (!this.recipe.isWatched){
+        //   this.updateLastWatchedRecipes(recipeId);
+        // }
+        // Use router.push to navigate to the RecipeViewPage
+        this.$router.push({ name: 'recipe', params: { recipeId : recipeId } });
+        this.$forceUpdate();
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  // watch: {
+  //   "recipe.isFavorited": function(newVal) {
+  //     this.recipe.isFavorited = newVal;
+  //   },
+  // },
 };
 </script>
 
@@ -56,7 +137,7 @@ export default {
   margin: 10px 10px;
 }
 
-.recipe-preview>.recipe-body {
+.recipe-preview > .recipe-body {
   width: 100%;
   height: 200px;
   position: relative;
