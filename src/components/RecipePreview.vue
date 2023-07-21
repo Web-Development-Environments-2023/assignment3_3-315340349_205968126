@@ -22,8 +22,6 @@
         <dt>{{ recipe.popularity }} likes</dt>
         <dt>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</dt>
         <dt>{{ recipe.isWatched ? "watched" : "" }}</dt>
-        <!-- <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt> -->
-        <!-- TODO: addFavorite -->
         <dt
           v-if="
             !recipe.isFavorited &&

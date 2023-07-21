@@ -29,7 +29,7 @@
               <div class="col" v-for="category in categories" :key="category.name">
                 <h3>{{ category.name }}</h3>
                 <div class="form-check" v-for="item in category.items" :key="item">
-                  <input class="form-check-input" type="checkbox" v-model="checkedItems[category.name][item]" value=item.value id=item>
+                  <input class="form-check-input" v-model="checkedItems[category.name][item]" value=item.value id=item>
                   <label class="form-check-label" for="item">
                     {{item}}
                   </label>
@@ -40,14 +40,14 @@
         </div>
       </div>
     </div>
-    <!-- <RecipePreviewList
-          v-if="filters.query"
+    <RecipePreviewList
+          v-if="searchflag"
           ref="SearchResults"
           title="Search Results"
           class="SearchResults"
           routeName = "/recipes/searchForRecepie"
-          filters = "filters"
-        /> -->
+          :filters = "filters"
+        />
   </div>
 </template>
 
@@ -57,6 +57,9 @@ import RecipePreviewList from '../components/RecipePreviewList.vue';
 import categories from '../assets/categories.js'
 
 export default {
+  components: {
+    RecipePreviewList,
+  },
   data() {
 
     // initialize checkedItems so it could handle all our categories and items
@@ -74,11 +77,13 @@ export default {
       returnOptions: [5, 10, 15],
       selectedReturnOption: 5,
       checkedItems: checkedItems,
+      searchflag: false,
       filters: {
         query: '',
         intolerances: checkedItems.Intolerances,
         diet: checkedItems.Diet,
         cuisine: checkedItems.Cuisine,
+        number: this.selectedReturnOption,
       }
     };
   },
@@ -91,10 +96,14 @@ export default {
           return this.checkedItems[category][item];
         });
       }
-      console.log('Search query:', this.filters.query);
-      console.log('Checked items:', checkedBoxes);
-      console.log('Diet:', checkedBoxes.Diet);
-      console.log('this is the filters', this.filters)
+      
+      console.log(checkedBoxes.Diet);
+      this.filters.intolerances = checkedBoxes.Intolerances;
+      this.filters.diet = checkedBoxes.Diet;
+      this.filters.cuisine = checkedBoxes.Cuisine;
+      this.filters.number = this.selectedReturnOption;
+      this.searchflag = true;
+      console.log(this.filters);
     },
     recipesToReturn(amount) {
       this.selectedReturnOption = amount;

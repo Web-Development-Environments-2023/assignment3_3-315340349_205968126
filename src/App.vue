@@ -42,8 +42,8 @@
               Dropdown
             </a>
             <div class="dropdown-menu">
-              <router-link class="dropdown-item" :to="{ name: 'route1' }">
-                Route 1
+              <router-link class="dropdown-item" :to="{ name: 'createRecipe' }">
+                createRecipe
               </router-link>
               <router-link class="dropdown-item" :to="{ name: 'route2' }">
                 Route 2
