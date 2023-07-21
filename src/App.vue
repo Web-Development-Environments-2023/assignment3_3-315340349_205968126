@@ -53,16 +53,17 @@
               </router-link>
             </div>
           </li>
+          
         </ul>
         <ul class="navbar-nav ml-auto">
           <li class="nav-item" v-if="$root.store.username">
-            <span class="navbar-text">{{ $root.store.username }}</span>
-            <button class="btn btn-link nav-link" @click="Logout">
-              Logout
-            </button>
+            <span class="navbar-text">Welcome {{ $root.store.username }}</span>
           </li>
           <li class="nav-item" v-else>
             <span class="navbar-text">Hello Guest</span>
+          </li>
+          <li v-if="$root.store.username">
+            <button class="btn btn-link nav-link" @click="Logout"> Logout </button>
           </li>
         </ul>
       </div>
@@ -96,5 +97,6 @@ export default {
   .container{
     padding-top: 30px;
   }
+
 </style>
 

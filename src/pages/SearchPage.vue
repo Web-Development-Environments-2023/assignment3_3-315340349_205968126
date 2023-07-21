@@ -41,11 +41,12 @@
       </div>
     </div>
     <!-- <RecipePreviewList
+          v-if="filters.query"
           ref="SearchResults"
           title="Search Results"
           class="SearchResults"
           routeName = "/recipes/searchForRecepie"
-
+          filters = "filters"
         /> -->
   </div>
 </template>
@@ -74,7 +75,10 @@ export default {
       selectedReturnOption: 5,
       checkedItems: checkedItems,
       filters: {
-        query: ''
+        query: '',
+        intolerances: checkedItems.Intolerances,
+        diet: checkedItems.Diet,
+        cuisine: checkedItems.Cuisine,
       }
     };
   },
@@ -87,8 +91,10 @@ export default {
           return this.checkedItems[category][item];
         });
       }
+      console.log('Search query:', this.filters.query);
       console.log('Checked items:', checkedBoxes);
       console.log('Diet:', checkedBoxes.Diet);
+      console.log('this is the filters', this.filters)
     },
     recipesToReturn(amount) {
       this.selectedReturnOption = amount;
