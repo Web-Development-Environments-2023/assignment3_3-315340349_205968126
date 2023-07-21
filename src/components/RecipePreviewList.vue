@@ -57,7 +57,6 @@ export default {
     async updateRecipes() {
       try {
         const response = await this.axios.get(
-          this.$root.store.server_domain + this.routeName
           this.$root.store.server_domain + this.routeName,
           {
             params: this.filters
@@ -66,9 +65,9 @@ export default {
         );
 
         // console.log(response);
-        const recipes = response.data; //.recipes;
-        console.log('this is the response')
-        console.log(response.data);
+        // const recipes = response.data; //.recipes;
+        // console.log('this is the response')
+        // console.log(response.data);
         const recipes = response.data;//.recipes;
         this.recipes = [];
         this.recipes.push(...recipes);
