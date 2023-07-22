@@ -1,25 +1,28 @@
 <template>
   <b-card>
     <router-link
-      :to="{
-        name: 'recipe',
-        params: { recipeId: recipe.id, route_name: this.route_name },
-      }"
-      class="recipe-preview"
-    ></router-link>
+  :to="{
+    name: 'recipe',
+    params: { recipeId: recipe.id ? recipe.id : recipe.recipe_id, route_name: this.route_name },
+  }"
+  class="recipe-preview"
+></router-link>
+
     <b-card-img
       :src="recipe.image"
       class="mask"
       href="#"
       style="background-color: hsla(0, 0%, 98%, 0.35);"
-      @click=openRecipe(recipe.id);
+      @click="openRecipe(recipe.id ? recipe.id : recipe.recipe_id)"
     />
     <!-- <b-card-title class="recipe-title">{{ title }}</b-card-title> -->
     <b-card-title id="title" :title="recipe.title"></b-card-title>
     <b-card-text>
       <b-list-group flush>
+      {{ recipe }}
         <dt>{{ recipe.readyInMinutes }} minutes</dt>
         <dt>{{ recipe.popularity }} likes</dt>
+        <dt>{{ recipe.vegetarian ? "Vegetarian" : "" }}</dt>
         <dt>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</dt>
         <dt>{{ recipe.isWatched ? "watched" : "" }}</dt>
         <!-- <dt>{{ recipe.isFavorited ? "favorited" : "" }}</dt> -->
@@ -29,10 +32,9 @@
             !recipe.isFavorited &&
               $root.store.username &&
               this.route_name != '/users/myRecipes' &&
-              this.route_name != '/users/familyRecipes'
-          "
+              this.route_name != '/users/familyRecipes'"
         >
-          <b-button ref="favoriteButton" @click="addToFavorites(recipe.id)"
+          <b-button ref="favoriteButton" @click="addToFavorites(recipe.id ? recipe.id : recipe.recipe_id)"
             >favorite</b-button
           >
         </dt>
@@ -74,6 +76,11 @@ export default {
       type: String,
       required: false,
     },
+    my_recipe: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   methods: {
     async addToFavorites(recipeId) {
@@ -113,7 +120,8 @@ export default {
         //   this.updateLastWatchedRecipes(recipeId);
         // }
         // Use router.push to navigate to the RecipeViewPage
-        this.$router.push({ name: 'recipe', params: { recipeId : recipeId } });
+        console.log('Recipe ID:', recipeId);
+        this.$router.push({ name: 'recipe', params: { recipeId : recipeId, mineRecipe : this.my_recipe } });
         this.$forceUpdate();
       } catch (error) {
         console.log(error);

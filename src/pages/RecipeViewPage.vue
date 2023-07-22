@@ -57,24 +57,33 @@ export default {
     };
   },
   async created() {
+    console.log("this.$route.params", this.$route.params);
     try {
       let response;
+      let path;
       // response = this.$route.params.response;
-
       try {
+        if (this.$route.params.mineRecipe){
+          path = "/users/getMyRecipe/"
+          console.log("mineRecipe")
+        }
+        else{
+          path = "/recipes/getRecipeFullData/"
+          console.log("not mineRecipe")
+        }
         response = await this.axios.get(
           // "https://test-for-3-2.herokuapp.com/recipes/info",
           this.$root.store.server_domain +
-            "/recipes/getRecipeFullData/" +
+            path +
             this.$route.params.recipeId,
           {
-            params: { id: this.$route.params.recipeId },
+            params: { recipeId: this.$route.params.recipeId },
           }
         );
         console.log("response.status", response.status);
         if (response.status !== 200) this.$router.replace("/NotFound");
       } catch (error) {
-        console.log("error.response.status", error.response.status);
+        console.log("error.status", error.status);
         this.$router.replace("/NotFound");
         return;
       }

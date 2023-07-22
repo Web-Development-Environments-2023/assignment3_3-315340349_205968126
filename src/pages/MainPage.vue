@@ -3,8 +3,7 @@
     <b-row>
       <b-col class="leftCol">
         <!--3 random recipes-->
-        // TODO: uncomment this
-        <!-- <RecipePreviewList
+        <RecipePreviewList
           ref="randomRecipe"
           title="Explore this recipes"
           class="RandomRecipes"
@@ -12,7 +11,7 @@
         />
         <button @click="$refs.randomRecipe.updateRecipes()">
           New Random Recipes
-        </button> -->
+        </button>
       </b-col>
       <b-col class="rightCol">
         <!--for logged in user, last watched recipes. else, login and sign-in option-->
