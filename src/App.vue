@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <Navbar /> <!-- Use the Navbar component here -->
-    <div class="container mt-5">
+    <div class="container mt-5 px-0">
       <router-view />
     </div>
   </div>
@@ -45,5 +45,18 @@ export default {
   text-align: center;
   color: #2c3e50;
   } */
+  body {
+    margin: 0;
+    padding: 0;
+    background: rgb(92, 195, 133);
+    background: linear-gradient(
+      0deg,
+      rgba(92, 195, 133, 1) 0%,
+      rgba(249, 249, 229, 1) 100%
+    );
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+  }
 </style>
 

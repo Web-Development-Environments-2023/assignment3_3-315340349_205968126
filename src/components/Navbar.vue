@@ -73,6 +73,8 @@
   export default {
     methods: {
       Logout() {
+        //Clear the search results form localStorage
+        localStorage.removeItem("searchResults");
         this.$root.store.logout();
         this.$root.toast("Logout", "User logged out successfully", "success");
   

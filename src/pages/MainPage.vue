@@ -66,17 +66,4 @@ body, html {
   padding: 0;
 }
 
-#test {
-  background: rgb(92,195,133);
-  background: linear-gradient(0deg, rgba(92,195,133,1) 0%, rgba(249,249,229,1) 100%);
-  background-position: center;
-  background-size: cover;
-  min-width: 100vw;
-  min-height: 100vh;
-}
-
-// .full-height {
-//   min-height: 100vh;
-//   min-width: 100vw;
-// }
 </style>

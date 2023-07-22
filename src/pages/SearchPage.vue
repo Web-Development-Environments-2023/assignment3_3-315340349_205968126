@@ -5,7 +5,7 @@
         <h1>Search Page</h1>
         <div class="row">
           <div class="input-group mb-3">
-            <input v-model="filters.query" type="text" class="form-control" aria-label="Search Query" aria-describedby="basic-addon2">
+            <input v-model="querytosearch" type="text" class="form-control" aria-label="Search Query" aria-describedby="basic-addon2">
 
             <div class="btn-group">
               <button class="btn btn-primary" @click="search">Search</button>
@@ -23,7 +23,7 @@
         <a data-toggle="collapse" href="#AdvanceFilter" role="button" aria-expanded="false" aria-controls="AdvanceFilter" class="advanced">
           Advance Search With Filters <i class="fa fa-angle-down"></i>
           </a>
-          <div class="collapse" id="AdvanceFilter">
+          <!-- <div class="collapse" id="AdvanceFilter">
             <div class="card card-body">
               <div class="row">
                 <div class="col" v-for="category in categories" :key="category.name">
@@ -37,16 +37,38 @@
                 </div>
               </div>
             </div>
+          </div> -->
+          <div class="collapse" id="AdvanceFilter">
+            <div class="card card-body">
+              <div class="row">
+                <div class="col" v-for="category in categories" :key="category.name">
+                  <h3>{{ category.name }}</h3>
+                  <div class="form-check" v-for="item in category.items" :key="item">
+                    <input
+                      class="form-check-input custom-checkbox" 
+                      type="checkbox"
+                      v-model="checkedItems[category.name][item]"
+                      :value="item.value"
+                      :id="item" 
+                    >
+                    <label class="form-check-label" :for="item"> <!-- Use the "for" attribute to associate the label with the checkbox -->
+                      {{ item }}
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
       <RecipePreviewList
-            v-if="searchflag"
             ref="SearchResults"
             title="Search Results"
             class="SearchResults"
             routeName = "/recipes/searchForRecepie"
+            :useLocalStorage="true"
             :filters = "filters"
+
           />
     </div>
   </div>
@@ -56,6 +78,7 @@
 
 import RecipePreviewList from '../components/RecipePreviewList.vue';
 import categories from '../assets/categories.js'
+
 
 export default {
   components: {
@@ -79,6 +102,8 @@ export default {
       selectedReturnOption: 5,
       checkedItems: checkedItems,
       searchflag: false,
+      searchResults: [],
+      querytosearch: '',
       filters: {
         query: '',
         intolerances: checkedItems.Intolerances,
@@ -99,12 +124,16 @@ export default {
       }
       
       console.log(checkedBoxes.Diet);
+      this.filters.query = this.querytosearch;
       this.filters.intolerances = checkedBoxes.Intolerances;
       this.filters.diet = checkedBoxes.Diet;
       this.filters.cuisine = checkedBoxes.Cuisine;
       this.filters.number = this.selectedReturnOption;
       this.searchflag = true;
       console.log(this.filters);
+    },
+    localStoragehandler(){
+      this.searchflag = true;
     },
     recipesToReturn(amount) {
       this.selectedReturnOption = amount;
@@ -144,10 +173,4 @@ export default {
   margin-right: 5px;
 }
 
-#search-page {
-  background: rgb(92, 195, 133);
-  background: linear-gradient(0deg, rgba(92, 195, 133, 1) 0%, rgba(249, 249, 229, 1) 100%);
-  min-width: 100vw;
-  min-height: 100vh;
-}
 </style>
