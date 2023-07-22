@@ -19,7 +19,6 @@
     <b-card-title id="title" :title="recipe.title"></b-card-title>
     <b-card-text>
       <b-list-group flush>
-      {{ recipe }}
         <dt>{{ recipe.readyInMinutes }} minutes</dt>
         <dt>{{ recipe.popularity }} likes</dt>
         <dt>{{ recipe.vegetarian ? "Vegetarian" : "" }}</dt>
