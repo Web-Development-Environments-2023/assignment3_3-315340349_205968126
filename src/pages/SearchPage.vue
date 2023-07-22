@@ -1,53 +1,54 @@
 <template>
-  <div class="container">
+  <div class="container-fluid m-0 p-0" id="test">
+    <div id='search-page' class="full-height p-4">
+      <div class="card">
+        <h1>Search Page</h1>
+        <div class="row">
+          <div class="input-group mb-3">
+            <input v-model="filters.query" type="text" class="form-control" aria-label="Search Query" aria-describedby="basic-addon2">
 
-    <div class="card">
-      <h1>Search Page</h1>
-      <div class="row">
-        <div class="input-group mb-3">
-          <input v-model="filters.query" type="text" class="form-control" aria-label="Search Query" aria-describedby="basic-addon2">
+            <div class="btn-group">
+              <button class="btn btn-primary" @click="search">Search</button>
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Recipes to return: {{ selectedReturnOption }}
+              </button>
+              <ul class="dropdown-menu">
+                <li v-for="item in returnOptions" :key="item">
+                  <a class="dropdown-item" type='button' @click="recipesToReturn(item)">{{ item }}</a>
+                </li>
+              </ul>
+            </div>
+        </div>
 
-          <div class="btn-group">
-            <button class="btn btn-primary" @click="search">Search</button>
-            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Recipes to return: {{ selectedReturnOption }}
-            </button>
-            <ul class="dropdown-menu">
-              <li v-for="item in returnOptions" :key="item">
-                <a class="dropdown-item" type='button' @click="recipesToReturn(item)">{{ item }}</a>
-              </li>
-            </ul>
-          </div>
-      </div>
-
-      <a data-toggle="collapse" href="#AdvanceFilter" role="button" aria-expanded="false" aria-controls="AdvanceFilter" class="advanced">
-        Advance Search With Filters <i class="fa fa-angle-down"></i>
-        </a>
-        <div class="collapse" id="AdvanceFilter">
-          <div class="card card-body">
-            <div class="row">
-              <div class="col" v-for="category in categories" :key="category.name">
-                <h3>{{ category.name }}</h3>
-                <div class="form-check" v-for="item in category.items" :key="item">
-                  <input class="form-check-input" v-model="checkedItems[category.name][item]" value=item.value id=item>
-                  <label class="form-check-label" for="item">
-                    {{item}}
-                  </label>
+        <a data-toggle="collapse" href="#AdvanceFilter" role="button" aria-expanded="false" aria-controls="AdvanceFilter" class="advanced">
+          Advance Search With Filters <i class="fa fa-angle-down"></i>
+          </a>
+          <div class="collapse" id="AdvanceFilter">
+            <div class="card card-body">
+              <div class="row">
+                <div class="col" v-for="category in categories" :key="category.name">
+                  <h3>{{ category.name }}</h3>
+                  <div class="form-check" v-for="item in category.items" :key="item">
+                    <input class="form-check-input" v-model="checkedItems[category.name][item]" value=item.value id=item>
+                    <label class="form-check-label" for="item">
+                      {{item}}
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      <RecipePreviewList
+            v-if="searchflag"
+            ref="SearchResults"
+            title="Search Results"
+            class="SearchResults"
+            routeName = "/recipes/searchForRecepie"
+            :filters = "filters"
+          />
     </div>
-    <RecipePreviewList
-          v-if="searchflag"
-          ref="SearchResults"
-          title="Search Results"
-          class="SearchResults"
-          routeName = "/recipes/searchForRecepie"
-          :filters = "filters"
-        />
   </div>
 </template>
 
@@ -141,5 +142,12 @@ export default {
 
 .form-check-inline .form-check-input {
   margin-right: 5px;
+}
+
+#search-page {
+  background: rgb(92, 195, 133);
+  background: linear-gradient(0deg, rgba(92, 195, 133, 1) 0%, rgba(249, 249, 229, 1) 100%);
+  min-width: 100vw;
+  min-height: 100vh;
 }
 </style>
