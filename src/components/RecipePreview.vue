@@ -3,7 +3,7 @@
     <router-link
       :to="{
         name: 'recipe',
-        params: { recipeId: recipe.id, route_name: this.route_name },
+        params: { recipeId:  recipe.id ? recipe.id : recipe.recipe_id, route_name: this.route_name },
       }"
       class="recipe-preview"
     >
@@ -24,6 +24,12 @@
         </div>
         <div class="card-detail">
           <i class="fas fa-seedling"></i>
+
+          <span>{{ recipe.vegetarian ? "Vegetarian" : "Non-Vegetarian" }}</span>
+        </div>
+        <div class="card-detail">
+          <i class="fas fa-seedling"></i>
+
           <span>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</span>
         </div>
         <div class="card-detail">
@@ -32,8 +38,13 @@
           <span v-if="recipe.isWatched">watched</span>
         </div>
       </div>
-      <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/familyRecipes'">
+
+      <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
+        <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)">
+
+      <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
         <b-button class="favorite-button" @click="addToFavorites(recipe.id)">
+
           <i v-if="recipe.isFavorited" class="fas fa-heart" style="color: red;"></i>
           <i v-else class="far fa-heart" style="color: black;"></i>
         </b-button>
@@ -51,6 +62,11 @@ export default {
     route_name: {
       type: String,
       required: false,
+    },
+    my_recipe: {
+      type: Boolean,
+      required: false,
+      default: false,
     },
   },
   methods: {
@@ -139,6 +155,7 @@ export default {
 
 .card-actions {
   text-align: right;
+
 }
 
 .card-actions b-button {
@@ -150,5 +167,4 @@ export default {
   border: none;
   padding: 0;
 }
-
 </style>

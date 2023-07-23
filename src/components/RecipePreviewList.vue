@@ -14,6 +14,15 @@
         <RecipePreview class="recipePreview" :recipe="r" :title="title" />
       </b-col>
     </b-row>
+    <b-row v-else>
+      <b-col v-for="r in recipes" :key="r.id" :sm="12">
+        <RecipePreview class="recipePreview" 
+          :recipe="r"
+          :title="title" 
+          :route_name="routeName"
+          :my_recipe="myRecipe"/>
+      </b-col>
+      </b-row>
   </b-container>
 </template>
 
@@ -58,6 +67,8 @@ export default {
   data() {
     return {
       recipes: [],
+
+      myRecipe: this.routeName=="/users/myRecipes" || this.routeName=="/users/myFamilyRecipes",
       colSize: 4, // Number of columns for RecipePreview (default is 4)
     };
   },
@@ -75,6 +86,8 @@ export default {
   methods: {
     async updateRecipes() {
       try {
+        // console.log("Hiiiiiiiiii");
+        // console.log(this.$root.store.server_domain + this.routeName);
         const response = await this.axios.get(
           this.$root.store.server_domain + this.routeName,
           {
