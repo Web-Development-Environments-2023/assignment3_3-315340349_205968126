@@ -6,12 +6,11 @@
     </h1>
     <b-row v-if="responsiveGrid">
       <b-col v-for="r in recipes" :key="r.id" :lg="colSize" :md="colSize" :sm="12">
-        <RecipePreview class="recipePreview" :recipe="r" :title="title" />
-      </b-col>
-    </b-row>
-    <b-row v-else>
-      <b-col v-for="r in recipes" :key="r.id" :sm="12">
-        <RecipePreview class="recipePreview" :recipe="r" :title="title" />
+        <RecipePreview class="recipePreview"
+          :recipe="r"
+          :title="title" 
+          :route_name="routeName"
+          :my_recipe="myRecipe"/>
       </b-col>
     </b-row>
     <b-row v-else>
@@ -67,7 +66,6 @@ export default {
   data() {
     return {
       recipes: [],
-
       myRecipe: this.routeName=="/users/myRecipes" || this.routeName=="/users/myFamilyRecipes",
       colSize: 4, // Number of columns for RecipePreview (default is 4)
     };

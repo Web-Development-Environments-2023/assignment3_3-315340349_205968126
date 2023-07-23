@@ -15,9 +15,9 @@
               <div class="form-check" id="test1">
                 <b-row>
                     <b-col>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="recipeInfo.name"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.cooking_time"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="recipeInfo.name" required></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.cooking_time" required min="0"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings" required min="0"></b-form-input>
                     </b-col>
                     <b-col>
                         <li>
@@ -90,7 +90,7 @@
                                 <div class="input-group-prepend">
                                     <button type="button" @click="addInstruction" class="btn btn-outline-secondary m-1">Add Step</button>
                                 </div>
-                                <textarea v-model="stepin" class="form-control" aria-label="With textarea"></textarea>
+                                <textarea v-model="stepin" class="form-control" aria-label="With textarea" required></textarea>
                             </div>
                             <ul>
                             <li v-for="(steps, index) in modifiedinstruction" :key="index">
