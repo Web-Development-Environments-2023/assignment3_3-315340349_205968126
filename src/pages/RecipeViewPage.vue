@@ -6,48 +6,45 @@
         <img :src="recipe.image" class="center" />
       </div>
       <div class="recipe-body">
-        <div class="wrapper">
-          <div class="wrapped">
-            <div class="mb-3">
-              <div>Ready in {{ recipe.readyInMinutes }} minutes</div>
-              <div>Likes: {{ recipe.popularity }} </div>
+        <div class="row">
+          <div class="col-md-6">
+            <b-card>
+              <template #header>
+                <h4>Ingredients</h4>
+              </template>
+              <ul class="list-unstyled">
+                <li v-for="(i) in recipe.ingredients" :key="i.ingredient" class="text-left">
+                  {{ i.amount.metric.value }} {{ i.amount.metric.unit }} {{ i.ingredient }}
+                </li>
+              </ul>
               <div>
-                {{ recipe.vegan ? "Vegan" : "Non-Vegan" }}
-                {{ recipe.vegetarian ? "Vegetarian" : "" }}
-                {{ recipe.glutenFree ? "Gluten Free" : "" }}
+                <i v-if="!recipe.vegan" class="fas fa-seedling"></i>
+                <li>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</li>
+                <i v-if="!recipe.vegetarian" class="fas fa-carrot"></i>
+                <li>{{ recipe.vegetarian ? "Vegetarian" : "Not-Vegetarian" }}</li>
+                <i v-if="!recipe.glutenFree" class="fas fa-bread-slice"></i>
+                <li>{{ recipe.glutenFree ? "Gluten Free" : "Not-Gluten Free" }}</li>
               </div>
-            </div>
-            Ingredients:
-            <ul>
-              <li v-for="(i) in recipe.ingredients" :key="i.ingredient">
-                {{i.amount.metric.value}} {{ i.amount.metric.unit }} {{ i.ingredient }}
-              </li>
-              <!-- <li
-                v-for="(r, index) in recipe.extendedIngredients"
-                :key="index + '_' + r.id"
-              >
-                {{ r.original }}
-              </li> -->
-            </ul>
+            </b-card>
           </div>
-          <div class="wrapped">
-            Instructions:
-            <ol>
-              <li v-for="step in recipe.steps" :key="step.stepNumber">
-                {{ step.instruction }}
-              </li>
-            </ol>
+          <div class="col-md-6">
+            <b-card>
+              <template #header>
+                <h4>Instructions</h4> 
+              </template>
+              <ol class="list-unstyled">
+                <li v-for="step in recipe.steps" :key="step.stepNumber" class="text-left">
+                  <b>{{ step.stepNumber }}.</b> {{ step.instruction }}
+                </li>
+              </ol>
+            </b-card>
           </div>
         </div>
       </div>
-      <!-- <pre>
-      {{ $route.params }}
-      {{ recipe }}
-    </pre
-      > -->
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -93,22 +90,6 @@ export default {
       } = response.data.recipeInfo;
 
       let { ingredients, steps } = response.data;
-      // let {
-      //   analyzedInstructions,
-      //   instructions,
-      //   extendedIngredients,
-      //   aggregateLikes,
-      //   readyInMinutes,
-      //   image,
-      //   title
-      // } = response.data;
-
-      // let _instructions = steps
-      //   .map((fstep) => {
-      //     fstep.steps[0].step = fstep.name + fstep.steps[0].step;
-      //     return fstep.steps;
-      //   })
-      //   .reduce((a, b) => [...a, ...b], []);
 
       let _recipe = {
         title,
@@ -123,17 +104,6 @@ export default {
         steps,
       };
 
-      // let _recipe = {
-      //   instructions,
-      //   _instructions,
-      //   analyzedInstructions,
-      //   extendedIngredients,
-      //   aggregateLikes,
-      //   readyInMinutes,
-      //   image,
-      //   title
-      // };
-
       this.recipe = _recipe;
     } catch (error) {
       console.log(error);
@@ -143,19 +113,58 @@ export default {
 </script>
 
 <style scoped>
-.wrapper {
-  display: flex;
+.container {
+  max-width: 900px;
+  margin: 0 auto;
 }
-.wrapped {
-  width: 50%;
+
+.recipe-header {
+  text-align: center;
 }
+
 .center {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: 50%;
+  margin: 0 auto;
+  max-width: 100%;
+  height: auto;
 }
-/* .recipe-header{
 
-} */
+.recipe-body {
+  margin-top: 20px;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wrapped {
+  width: 48%;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+h4 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+ul {
+  padding-left: 20px;
+}
+
+ol {
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 5px;
+}
+
+li.text-left{
+  text-align: left;
+}
 </style>

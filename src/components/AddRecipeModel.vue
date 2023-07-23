@@ -15,26 +15,26 @@
               <div class="form-check" id="test1">
                 <b-row>
                     <b-col>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="titlein"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="minutesin"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="servingsin"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="recipeInfo.name"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.cooking_time"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings"></b-form-input>
                     </b-col>
                     <b-col>
                         <li>
-                            <input class="form-check-input" type="checkbox" value="" id="VeganCheck">
+                            <input class="form-check-input" type="checkbox" value="" id="VeganCheck" v-model="recipeInfo.vegan">
                             <label class="form-check-label" for="VeganCheck">
                             Vegan
                             </label>
                         </li>
                         <li>
-                            <input class="form-check-input" type="checkbox" value="" id="VegetarianCheck2">
+                            <input class="form-check-input" type="checkbox" value="" id="VegetarianCheck2" v-model="recipeInfo.vegetarian">
                             <label class="form-check-label" for="VegetarianCheck2">
                             Vegetarian
                             </label>
                           
                         </li>
                         <li>
-                            <input class="form-check-input" type="checkbox" value="" id="GultenCheck">
+                            <input class="form-check-input" type="checkbox" value="" id="GultenCheck" v-model="recipeInfo.glutenFree">
                             <label class="form-check-label" for="GultenCheck">
                             Gluten Free
                             </label>
@@ -53,6 +53,7 @@
                         accept="image/*"
                         ref="imageInput"
                         class="m-2"
+                        :v-model="recipeInfo.image"
                     >
                     <img v-if="imagePreview" :src="imagePreview" alt="Uploaded image" class="uploaded-image">
                 </b-row>
@@ -92,8 +93,8 @@
                                 <textarea v-model="stepin" class="form-control" aria-label="With textarea"></textarea>
                             </div>
                             <ul>
-                            <li v-for="(instruction, index) in modifiedinstruction" :key="index">
-                            {{ instruction.index }}. {{ instruction.text }}
+                            <li v-for="(steps, index) in modifiedinstruction" :key="index">
+                            {{ steps.index }}. {{ steps.text }}
                             <button type="button" class="close" @click="removeIngredient(index)" aria-label="Remove">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -105,7 +106,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-primary" @click="saveRecipe">Save changes</button>
             <button type="button" class="btn btn-secondary" @click="resetForm" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -115,29 +116,28 @@
   
   <script>
   import unitOptionsData from "../assets/unitOptions.json";
-  import {
-  required,
-  minLength,
-  maxLength,
-  alpha,
-  sameAs,
-  email,
-  minValue, // Import the minValue validator for "Minutes to Cook"
-  numeric,  // Import the numeric validator for "Minutes to Cook"
-} from "vuelidate/lib/validators";
+  
   export default {
     data() {
       return {
         imagePreview: null,
+        recipeInfo: {
+            name: "",
+            cooking_time: "",
+            vegan: false,
+            glutenFree: false,
+            vegetarian: false,
+            instructions: "",
+            servings: "",
+            likes: "",
+            image: "",
+        },
         ingredients: [],
-        instructions: [],
+        steps: [],
         ingredientin: '',
         valuein: '',
         unitin: '',
         stepin: '',
-        titlein: '',
-        minutesin: '',
-        servingsin: '',
         valueInError: false,
         unitOptions: unitOptionsData.units,
       };
@@ -167,15 +167,18 @@
 
         // Add instruction to the instructions list
         addInstruction() {
-        this.instructions.push({ text: this.stepin });
+        this.steps.push({ text: this.stepin });
         this.stepin = '';
         },
 
         // Remove instruction at the specified index
         removeInstruction(index) {
-        this.instructions.splice(index, 1);
+        this.steps.splice(index, 1);
         },
         saveRecipe(){
+            console.log('this is the recipeinfo:', this.recipeInfo);
+            console.log('this is the ingredients:', this.ingredients);
+            console.log('this is the steps:', this.steps);
         },
         // Method to reset the form data
         resetForm() {
@@ -221,33 +224,15 @@
         },
         modifiedinstruction() {
         // If the instructions array is empty, return an empty array
-        if (this.instructions.length === 0) {
+        if (this.steps.length === 0) {
             return [];
         }
 
         // Otherwise, create a modified array with the instructions and their respective index starting from 1
-        return this.instructions.map((instruction, index) => ({
+        return this.steps.map((steps, index) => ({
             index: index + 1,
-            text: instruction.text,
+            text: steps.text,
         }));
-        },
-    },
-    validations: {
-        titlein: {
-            required,
-            minLength: minLength(3),
-            maxLength: maxLength(50),
-        },
-        minutesin: {
-            required,
-            numeric, // To ensure the input is numeric
-            minValue: minValue(0.5),
-        },
-        servingsin: {
-            required,
-            numeric, // To ensure the input is numeric
-            minValue: minValue(1),
-            maxValue: minValue(1000),
         },
     },
   };
