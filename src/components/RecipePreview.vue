@@ -24,10 +24,12 @@
         </div>
         <div class="card-detail">
           <i class="fas fa-seedling"></i>
+
           <span>{{ recipe.vegetarian ? "Vegetarian" : "Non-Vegetarian" }}</span>
         </div>
         <div class="card-detail">
           <i class="fas fa-seedling"></i>
+
           <span>{{ recipe.vegan ? "Vegan" : "Non-Vegan" }}</span>
         </div>
         <div class="card-detail">
@@ -36,8 +38,13 @@
           <span v-if="recipe.isWatched">watched</span>
         </div>
       </div>
+
       <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
         <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)">
+
+      <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
+        <b-button class="favorite-button" @click="addToFavorites(recipe.id)">
+
           <i v-if="recipe.isFavorited" class="fas fa-heart" style="color: red;"></i>
           <i v-else class="far fa-heart" style="color: black;"></i>
         </b-button>
@@ -47,20 +54,6 @@
 </template>
 <script>
 export default {
-  components: {
-    BListGroup,
-  },
-  mounted() {
-    this.axios.get(this.recipe.image).then((i) => {
-      this.image_load = true;
-    });
-    if (this.$root.store.username){}
-  },
-  data() {
-    return {
-      image_load: false,
-    };
-  },
   props: {
     recipe: {
       type: Object,
@@ -87,34 +80,6 @@ export default {
         );
         console.log(response);
         this.recipe.isFavorited = true;
-        this.$forceUpdate();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async updateLastWatchedRecipes(recipeId) {
-      try {
-        const response = await this.axios.post(
-          this.$root.store.server_domain + "/users/updateLastWatched",
-          {
-            recipe_id: recipeId,
-          }
-        );
-        console.log("updateLastWatchedRecipes", this.recipe.isWatched, response);
-        this.recipe.isWatched = true;
-        this.$forceUpdate();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    async openRecipe(recipeId) {
-      try {
-        // TODO: updateLastWatchedRecipes
-        // if (!this.recipe.isWatched){
-        //   this.updateLastWatchedRecipes(recipeId);
-        // }
-        // Use router.push to navigate to the RecipeViewPage
-        this.$router.push({ name: 'recipe', params: { recipeId : recipeId } });
         this.$forceUpdate();
       } catch (error) {
         console.log(error);
@@ -190,6 +155,7 @@ export default {
 
 .card-actions {
   text-align: right;
+
 }
 
 .card-actions b-button {
@@ -201,5 +167,4 @@ export default {
   border: none;
   padding: 0;
 }
-
 </style>
