@@ -17,6 +17,7 @@
         <RecipePreview class="recipePreview" 
           :recipe="r"
           :title="title"
+          :route_name="routeName"
           :my_recipe="myRecipe"/>
       </b-col>
       </b-row>
@@ -50,15 +51,15 @@ export default {
   },
   mounted() {
     this.updateRecipes();
-    console.log("routeName:", this.routeName);
-    console.log("myRecipe:", this.myRecipe);
+    // console.log("routeName:", this.routeName);
+    // console.log("myRecipe:", this.myRecipe);
   },
   methods: {
     //TODO: uncomment this
     async updateRecipes() {
       try {
-        console.log("Hiiiiiiiiii");
-        console.log(this.$root.store.server_domain + this.routeName);
+        // console.log("Hiiiiiiiiii");
+        // console.log(this.$root.store.server_domain + this.routeName);
         const response = await this.axios.get(
           this.$root.store.server_domain + this.routeName
           // "https://test-for-3-2.herokuapp.com/recipes/random"

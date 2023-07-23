@@ -31,16 +31,17 @@
             !recipe.isFavorited &&
               $root.store.username &&
               this.route_name != '/users/myRecipes' &&
-              this.route_name != '/users/familyRecipes'"
+              this.route_name != '/users/myFamilyRecipes'"
         >
-          <b-button ref="favoriteButton" @click="addToFavorites(recipe.id ? recipe.id : recipe.recipe_id)"
-            >favorite</b-button
-          >
+          <b-button ref="favoriteButton"
+           @click="addToFavorites(recipe.id ? recipe.id : recipe.recipe_id)">
+           favorite
+          </b-button>
         </dt>
         <dt v-if="recipe.isFavorited &&
               $root.store.username &&
               this.route_name != '/users/myRecipes' &&
-              this.route_name != '/users/familyRecipes'">
+              this.route_name != '/users/myFamilyRecipes'">
           favorite
         </dt>
       </b-list-group>
@@ -59,7 +60,6 @@ export default {
     this.axios.get(this.recipe.image).then((i) => {
       this.image_load = true;
     });
-    if (this.$root.store.username){}
   },
   data() {
     return {
