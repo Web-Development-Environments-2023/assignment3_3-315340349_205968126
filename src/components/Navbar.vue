@@ -30,6 +30,11 @@
               Search
             </router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" :to="{ name: 'about' }">
+              About
+            </router-link>
+          </li>
           <li class="nav-item" v-if="!$root.store.username">
             <router-link class="nav-link" :to="{ name: 'register' }">
               Register
@@ -47,12 +52,12 @@
               data-toggle="modal"
               data-target="#exampleModal"
             >
-              Open Modal Form
+              New Recipe
             </a>
           </li>
           <li class="nav-item dropdown" v-if="$root.store.username">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
+              Personal Recipes
             </a>
             <div class="dropdown-menu">
               <router-link class="dropdown-item" :to="{ name: 'favoriteRecipes' }">
