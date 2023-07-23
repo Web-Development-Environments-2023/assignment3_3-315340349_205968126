@@ -19,7 +19,7 @@
                         <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.readyInMinutes" required min="0"></b-form-input>
                         <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings" required min="0"></b-form-input>
                     </b-col>
-                    <b-col>
+                    <b-col class="checkboxCol">
                         <li>
                             <input class="form-check-input" type="checkbox" value="" id="VeganCheck" v-model="recipeInfo.vegan">
                             <label class="form-check-label" for="VeganCheck">
@@ -43,14 +43,15 @@
 
                     </b-col>
                 </b-row>
-                <b-row>
+                <div>
                     <label for="image-input" class="custom-file-upload m-2">
                     Image URL:
                     </label>
-                    <b-form-input
+                    <b-form-input 
+                
                     type="url"
                     v-model="recipeInfo.imageUrl"
-                    class="m-2"
+                    class="mr-auto m"
                     placeholder="Enter Image URL"
                     ></b-form-input>
                     <img
@@ -59,10 +60,10 @@
                     alt="Uploaded image"
                     class="uploaded-image"
                     />
-                </b-row>
+                </div>
               </div>
               <div class="form-input" id="items-steps-ingri">
-                    <b-row>
+                    <div>
                     <!-- Ingredients input group -->
                     <b-form-group>
                         <div class="form-inline">
@@ -104,7 +105,7 @@
                             </li>
                         </ul>
                     </b-form-group>
-                    </b-row>
+                </div>
                 </div>
             </form>
           </div>
@@ -290,14 +291,51 @@
   </script>
   
   
-  <style>
-  /* Add any custom styles for the modal if needed */
-    .uploaded-image {
-        max-width: 350px;
-        max-height: 350px;
-        margin: 10px; /* Add margin here to create some space around the image */
-        
-    }
+  <style scoped>
+  .modal-container {
+    max-width: 600px; /* Adjust this value based on your requirement */
+    margin: 0 auto; /* Center the modal horizontally */
+    padding: 20px;
+  }
+  
+  .modal-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Align inputs to the left */
+  }
 
+  .checkboxCol {
+  display: flex;
+  flex-direction: column;
+
+  }
+
+  .form-control {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+.form-check {
+  display: table; /* Use table layout to align items vertically */
+  align-items: center; /* Align items (checkbox and label) vertically */
+  margin-bottom: 10px; /* Adjust this value as needed */
+}
+  .form-check-label {
+    margin-left:5px;
+  }
+  
+  .uploaded-image {
+    max-width: 350px;
+    max-height: 350px;
+    margin: 10px; /* Add margin here to create some space around the image */
+  }
+  
+  /* Additional styles for the image URL input */
+  .b-form-input {
+    box-sizing: border-box; /* Ensure padding and border are included in the width */
+    max-width: 100%; /* Limit the input width to stay within the modal */
+    overflow: hidden; /* Hide any content that exceeds the width */
+    text-overflow: ellipsis; /* Show ellipsis if the content exceeds the width */
+  }
+  /* Add any other custom styles you need for the modal here */
   </style>
   
