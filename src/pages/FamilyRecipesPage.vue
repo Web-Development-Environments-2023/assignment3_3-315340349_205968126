@@ -21,3 +21,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.FamilyRecipesPage {
+    margin-top: 80px;
+}
+</style>

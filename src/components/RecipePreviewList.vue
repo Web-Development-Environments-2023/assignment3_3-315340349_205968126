@@ -27,6 +27,7 @@
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
+import axios from "axios";
 
 export default {
   name: "RecipePreviewList",
@@ -93,8 +94,20 @@ export default {
           }
         );
         const recipes = response.data;
-        this.recipes = [];
-        this.recipes.push(...recipes);
+
+        for (const recipe of recipes) {
+          // Fetch isFavorite and isWatched values for each recipe
+          const recipeId = recipe.id;
+          const response = await axios.get(
+            `${this.$root.store.server_domain}/users/favoriteandWatched/${recipeId}`
+          );
+          recipe.isFavorite = response.data.isFavorite;
+          recipe.isWatched = response.data.isWatched;
+        }
+        this.recipes = recipes;
+        console.log("this.recipes", this.recipes);
+        // this.recipes = [];
+        // this.recipes.push(...recipes);
         if (this.useLocalStorage) {
           localStorage.setItem("searchResults", JSON.stringify(this.recipes));
         }

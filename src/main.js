@@ -3,7 +3,7 @@ import App from "./App.vue";
 import VueAxios from "vue-axios";
 import axios from "axios";
 // import VueCookies from "vue-cookies";
-
+import { createApp } from "vue";
 import routes from "./routes";
 import VueRouter from "vue-router";
 Vue.use(VueRouter);

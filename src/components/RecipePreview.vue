@@ -40,8 +40,8 @@
       </div>
 
       <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
-        <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)">
-          <i v-if="recipe.isFavorited" class="fas fa-heart" style="color: red;"></i>
+        <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)" :disabled="recipe.isFavorite" variant="outline-secondary">
+          <i v-if="recipe.isFavorite" class="fas fa-heart" style="color: red;"></i>
           <i v-else class="far fa-heart" style="color: black;"></i>
         </b-button>
       </div>

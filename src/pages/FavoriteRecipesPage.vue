@@ -21,3 +21,9 @@ export default {
     },
 };
 </script>
+
+<style scoped>
+.FavoriteRecipesPage {
+    margin-top: 80px;
+}
+</style>
