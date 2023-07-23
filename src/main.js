@@ -41,6 +41,12 @@ import {
 ].forEach((x) => Vue.use(x));
 Vue.use(Vuelidate);
 import { BCard } from 'bootstrap-vue'
+// import { BCard, BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+// import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap-vue/dist/bootstrap-vue.css';
+// Vue.use(BootstrapVue);
+// Vue.use(IconsPlugin);
+
 Vue.component('b-card', BCard)
 
 
