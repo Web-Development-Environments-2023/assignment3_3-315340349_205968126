@@ -1,30 +1,34 @@
 <template>
-  <div class="container">
-    <b-row>
-      <b-col class="leftCol">
-        <!--3 random recipes-->
-        <RecipePreviewList
-          ref="randomRecipe"
-          title="Explore this recipes"
-          class="RandomRecipes"
-          routeName = "/recipes/getRandoms"
-        />
-        <button @click="$refs.randomRecipe.updateRecipes()">
-          New Random Recipes
-        </button>
-      </b-col>
-      <b-col class="rightCol">
-        <!--for logged in user, last watched recipes. else, login and sign-in option-->
-        <RecipePreviewList
-          v-show="$root.store.username"
-          ref="lastViewed"
-          title="Last Viewed Recipes"
-          class="LastViewedRecipes"
-          routeName = "/users/lastWatched"
-        ></RecipePreviewList>
-        <LoginPage v-show="!$root.store.username"></LoginPage>
-      </b-col>
-    </b-row>
+  <div class="container-fluid m-0 p-0" id="test" >
+    <div id="main-page" class="full-height p-4">
+      <b-row>
+        <b-col class="leftCol p-0">
+          <!-- 3 random recipes-->
+          <RecipePreviewList
+            ref="randomRecipe"
+            title="Explore this recipes"
+            class="RandomRecipes"
+            routeName = "/recipes/getRandoms"
+            :responsiveGrid="false"
+          />
+          <button @click="$refs.randomRecipe.updateRecipes()">
+            New Random Recipes
+          </button>
+        </b-col>
+        <b-col class="rightCol">
+          <!--for logged in user, last watched recipes. else, login and sign-in option-->
+          <RecipePreviewList
+            v-if="$root.store.username"
+            ref="lastViewed"
+            title="Last Viewed Recipes"
+            class="LastViewedRecipes"
+            routeName = "/users/getLastWatched"
+            :responsiveGrid="false"
+          ></RecipePreviewList>
+          <LoginPage v-if="!$root.store.username"></LoginPage>
+        </b-col>
+      </b-row>
+    </div>
   </div>
 </template>
 
@@ -33,6 +37,7 @@ import RecipePreviewList from "../components/RecipePreviewList";
 import LoginPage from "./LoginPage.vue";
 export default {
   components: {
+    //TODO: uncomment this
     RecipePreviewList,
     LoginPage,
   },
@@ -57,4 +62,9 @@ export default {
 //   pointer-events: none;
 //   cursor: default;
 // }
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
 </style>

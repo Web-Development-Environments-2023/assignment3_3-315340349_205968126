@@ -1,84 +1,25 @@
 <template>
   <div id="app">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-      <router-link class="navbar-brand" :to="{ name: 'main' }">
-        Vue Recipes
-      </router-link>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'main' }">
-              Home
-            </router-link>
-          </li>
-          <li class="nav-item">
-            <router-link class="nav-link" :to="{ name: 'search' }">
-              Search
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="!$root.store.username">
-            <router-link class="nav-link" :to="{ name: 'register' }">
-              Register
-            </router-link>
-          </li>
-          <li class="nav-item" v-if="!$root.store.username">
-            <router-link class="nav-link" :to="{ name: 'login' }">
-              Login
-            </router-link>
-          </li>
-          <li class="nav-item dropdown" v-if="$root.store.username">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </a>
-            <div class="dropdown-menu">
-              <router-link class="dropdown-item" :to="{ name: 'route1' }">
-                Route 1
-              </router-link>
-              <router-link class="dropdown-item" :to="{ name: 'route2' }">
-                Route 2
-              </router-link>
-              <router-link class="dropdown-item" :to="{ name: 'route3' }">
-                Route 3
-              </router-link>
-            </div>
-          </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-          <li class="nav-item" v-if="$root.store.username">
-            <span class="navbar-text">{{ $root.store.username }}</span>
-            <button class="btn btn-link nav-link" @click="Logout">
-              Logout
-            </button>
-          </li>
-          <li class="nav-item" v-else>
-            <span class="navbar-text">Hello Guest</span>
-          </li>
-        </ul>
-      </div>
-    </nav>
-    
-    <div class="container">
+    <Navbar /> <!-- Use the Navbar component here -->
+    <div class="container mt-5 px-0">
       <router-view />
     </div>
+    <AddRecipeModel />
   </div>
 </template>
 
 
 
 <script>
+import Navbar from "./components/Navbar.vue"; // Import the Navbar component
+import AddRecipeModel from "./components/AddRecipeModel.vue";
+
 export default {
   name: "App",
+  components: {
+    Navbar, // Add the Navbar component to the list of components
+    AddRecipeModel,
+  },
   methods: {
     Logout() {
       this.$root.store.logout();
@@ -93,8 +34,33 @@ export default {
 </script>
 
 <style>
-  .container{
+  /* .container{
     padding-top: 30px;
+  } */
+  /* .app{
+    background: rgb(92,195,133);
+    background: linear-gradient(90deg, rgba(92,195,133,1) 0%, rgba(249,249,229,1) 100%);
+  } */
+  #app {
+    font-family: 'Quicksand', Helvetica, Arial, sans-serif; /* Use 'Quicksand' as the primary font */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  body {
+    margin: 0;
+    padding: 0;
+    /* background: rgb(92, 195, 133);
+    background: linear-gradient(
+      0deg,
+      rgba(92, 195, 133, 1) 0%,
+      rgba(249, 249, 229, 1) 100%
+    ); */
+    background-image: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
   }
 </style>
 
