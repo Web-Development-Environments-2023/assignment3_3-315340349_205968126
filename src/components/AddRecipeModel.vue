@@ -15,9 +15,9 @@
               <div class="form-check" id="test1">
                 <b-row>
                     <b-col>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="recipeInfo.name"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.cooking_time"></b-form-input>
-                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Title" v-model="recipeInfo.title" required></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Minute to Cook" v-model="recipeInfo.readyInMinutes" required min="0"></b-form-input>
+                        <b-form-input type="text" class="form-control  m-1" placeholder="Number of Dishes" v-model="recipeInfo.servings" required min="0"></b-form-input>
                     </b-col>
                     <b-col>
                         <li>
@@ -45,17 +45,20 @@
                 </b-row>
                 <b-row>
                     <label for="image-input" class="custom-file-upload m-2">
-                        Choose Image: 
+                    Image URL:
                     </label>
-                    <input
-                        type="file"
-                        @change="handleImageUpload"
-                        accept="image/*"
-                        ref="imageInput"
-                        class="m-2"
-                        :v-model="recipeInfo.image"
-                    >
-                    <img v-if="imagePreview" :src="imagePreview" alt="Uploaded image" class="uploaded-image">
+                    <b-form-input
+                    type="url"
+                    v-model="recipeInfo.imageUrl"
+                    class="m-2"
+                    placeholder="Enter Image URL"
+                    ></b-form-input>
+                    <img
+                    v-if="imagePreview"
+                    :src="imagePreview"
+                    alt="Uploaded image"
+                    class="uploaded-image"
+                    />
                 </b-row>
               </div>
               <div class="form-input" id="items-steps-ingri">
@@ -90,12 +93,12 @@
                                 <div class="input-group-prepend">
                                     <button type="button" @click="addInstruction" class="btn btn-outline-secondary m-1">Add Step</button>
                                 </div>
-                                <textarea v-model="stepin" class="form-control" aria-label="With textarea"></textarea>
+                                <textarea v-model="stepin" class="form-control" aria-label="With textarea" required></textarea>
                             </div>
                             <ul>
                             <li v-for="(steps, index) in modifiedinstruction" :key="index">
                             {{ steps.index }}. {{ steps.text }}
-                            <button type="button" class="close" @click="removeIngredient(index)" aria-label="Remove">
+                            <button type="button" class="close" @click="removeInstruction(index)" aria-label="Remove">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                             </li>
@@ -106,7 +109,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary" @click="saveRecipe">Save changes</button>
+            <button type="button" class="btn btn-primary" @click="saveRecipe" data-dismiss="modal">Save changes</button>
             <button type="button" class="btn btn-secondary" @click="resetForm" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -116,20 +119,20 @@
   
   <script>
   import unitOptionsData from "../assets/unitOptions.json";
-  
+  import axios from "axios";
+
   export default {
     data() {
       return {
         imagePreview: null,
         recipeInfo: {
-            name: "",
-            cooking_time: "",
+            title: "",
+            readyInMinutes: "",
+            vegetarian: false,
             vegan: false,
             glutenFree: false,
-            vegetarian: false,
-            instructions: "",
             servings: "",
-            likes: "",
+            popularity: "",
             image: "",
         },
         ingredients: [],
@@ -155,9 +158,9 @@
         this.ingredientin = '';
         this.valuein = '';
         this.unitin = '';
-        this.vegan = false;
-        this.vegetarian = false;
-        this.glutenFree = false;
+        // this.vegan = false;
+        // this.vegetarian = false;
+        // this.glutenFree = false;
         },
 
         // Remove ingredient at the specified index
@@ -175,14 +178,61 @@
         removeInstruction(index) {
         this.steps.splice(index, 1);
         },
-        saveRecipe(){
-            console.log('this is the recipeinfo:', this.recipeInfo);
-            console.log('this is the ingredients:', this.ingredients);
-            console.log('this is the steps:', this.steps);
+
+        async saveRecipe(){
+            try {
+                const data = {
+                // user_id: $root.store.user_id, // Replace this with the actual user ID
+                recipeInfo: {
+                    image: this.recipeInfo.image,
+                    title: this.recipeInfo.title,
+                    readyInMinutes: parseInt(this.recipeInfo.readyInMinutes),
+                    vegetarian: this.recipeInfo.vegetarian ? 1 : 0,
+                    vegan: this.recipeInfo.vegan ? 1 : 0,
+                    glutenFree: this.recipeInfo.glutenFree ? 1 : 0,
+                    instructions: this.recipeInfo.instructions,
+                    servings: parseInt(this.recipeInfo.servings),
+                    popularity: parseInt(this.recipeInfo.popularity),
+                },
+                ingredients: this.ingredients.map((ingredient) => ({
+                    name: ingredient.name,
+                    amount: {
+                    metric: {
+                        unit: ingredient.unit,
+                        value: parseFloat(ingredient.value),
+                    },
+                    },
+                })),
+                steps: this.steps.map((step, index) => ({
+                    stepNumber: index + 1,
+                    instruction: step.text,
+                })),
+                };
+                // Send the recipe data to the server
+                const response = await axios.post(this.$root.store.server_domain + '/users/addRecipe', data);
+
+                // Assuming the server responds with a success message
+                // Reset the form data after successful save
+                this.resetForm();
+                // Close the modal
+                $('#exampleModal').modal('hide');
+                alert('Recipe saved successfully!');
+            } catch (error) {
+            // Handle any error that occurred during the HTTP request
+            console.error('Error saving recipe:', error);
+            }
         },
         // Method to reset the form data
         resetForm() {
             this.imagePreview = null;
+            this.recipeInfo.title = "",
+            this.recipeInfo.readyInMinutes = "",
+            this.recipeInfo.vegetarian = false,
+            this.recipeInfo.vegan = false,
+            this.recipeInfo.glutenFree = false,
+            this.recipeInfo.servings = "",
+            this.recipeInfo.popularity = "",
+            this.recipeInfo.image = "",
             this.ingredients = [];
             this.instructions = [];
             this.ingredientin = '';
@@ -191,7 +241,8 @@
             this.stepin = '';
             this.titlein = '';
             this.minutesin = '';
-            this.servingsin = '';
+            this.servingsin = '';  
+            this.recipeInfo.imageUrl = '';    
         },
         validateValueIn(){
             const inputValue = this.valuein.trim();

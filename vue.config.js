@@ -3,8 +3,8 @@ module.exports = {
     devtool: "source-map"
   },
   devServer: {
-    host: "dani.cs.bgu.ac.il"
-    // host: "localhost"
+    // host: "dani.cs.bgu.ac.il"
+    host: "localhost"
   }
   // publicPath: process.env.NODE_ENV === "production" ? "/LAB12/" : "/"
 };

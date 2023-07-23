@@ -3,11 +3,11 @@
     <router-link
       :to="{
         name: 'recipe',
-        params: { recipeId:  recipe.id ? recipe.id : recipe.recipe_id, route_name: this.route_name },
+        params: { recipeId:  recipe.id ? recipe.id : recipe.recipe_id, route_name: this.route_name, mineRecipe : this.my_recipe, image: this.image },
       }"
       class="recipe-preview"
     >
-      <div class="card-image" :style="{ backgroundImage: `url(${recipe.image})` }">
+      <div class="card-image" @click="openRecipe(recipe.id ? recipe.id : recipe.recipe_id)" :style="{ backgroundImage: `url(${recipe.image})` }">
         <div class="card-overlay"></div>
         <div class="card-title">{{ recipe.title }}</div>
       </div>
@@ -40,12 +40,8 @@
       </div>
 
       <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
-        <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)">
-
-      <div class="card-actions" v-if="$root.store.username && this.route_name !== '/users/myRecipes' && this.route_name !== '/users/myFamilyRecipes'">
-        <b-button class="favorite-button" @click="addToFavorites(recipe.id)">
-
-          <i v-if="recipe.isFavorited" class="fas fa-heart" style="color: red;"></i>
+        <b-button class="favorite-button" @click="addToFavorites( recipe.id ? recipe.id : recipe.recipe_id)" :disabled="recipe.isFavorite" variant="outline-secondary">
+          <i v-if="recipe.isFavorite" class="fas fa-heart" style="color: red;"></i>
           <i v-else class="far fa-heart" style="color: black;"></i>
         </b-button>
       </div>
@@ -53,6 +49,7 @@
   </div>
 </template>
 <script>
+
 export default {
   props: {
     recipe: {
@@ -67,6 +64,10 @@ export default {
       type: Boolean,
       required: false,
       default: false,
+    },
+    image: {
+      type: String,
+      required: false,
     },
   },
   methods: {
@@ -85,6 +86,22 @@ export default {
         console.log(error);
       }
     },
+    async openRecipe(recipeId) {
+    try {
+      // console.log("openRecipe");
+      const response = await this.axios.post(
+        this.$root.store.server_domain + "/users/updateLastWatched",
+        {
+          recipe_id: recipeId,
+        }
+      );
+      console.log(response);
+      this.recipe.isWatched = true;
+      this.$forceUpdate();
+    } catch (error) {
+      console.log(error);
+    }
+  },
   },
 };
 </script>

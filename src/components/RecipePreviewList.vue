@@ -6,12 +6,11 @@
     </h1>
     <b-row v-if="responsiveGrid">
       <b-col v-for="r in recipes" :key="r.id" :lg="colSize" :md="colSize" :sm="12">
-        <RecipePreview class="recipePreview" :recipe="r" :title="title" />
-      </b-col>
-    </b-row>
-    <b-row v-else>
-      <b-col v-for="r in recipes" :key="r.id" :sm="12">
-        <RecipePreview class="recipePreview" :recipe="r" :title="title" />
+        <RecipePreview class="recipePreview"
+          :recipe="r"
+          :title="title" 
+          :route_name="routeName"
+          :my_recipe="myRecipe"/>
       </b-col>
     </b-row>
     <b-row v-else>
@@ -28,6 +27,7 @@
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
+import axios from "axios";
 
 export default {
   name: "RecipePreviewList",
@@ -67,7 +67,6 @@ export default {
   data() {
     return {
       recipes: [],
-
       myRecipe: this.routeName=="/users/myRecipes" || this.routeName=="/users/myFamilyRecipes",
       colSize: 4, // Number of columns for RecipePreview (default is 4)
     };
@@ -95,8 +94,20 @@ export default {
           }
         );
         const recipes = response.data;
-        this.recipes = [];
-        this.recipes.push(...recipes);
+
+        for (const recipe of recipes) {
+          // Fetch isFavorite and isWatched values for each recipe
+          const recipeId = recipe.id;
+          const response = await axios.get(
+            `${this.$root.store.server_domain}/users/favoriteandWatched/${recipeId}`
+          );
+          recipe.isFavorite = response.data.isFavorite;
+          recipe.isWatched = response.data.isWatched;
+        }
+        this.recipes = recipes;
+        console.log("this.recipes", this.recipes);
+        // this.recipes = [];
+        // this.recipes.push(...recipes);
         if (this.useLocalStorage) {
           localStorage.setItem("searchResults", JSON.stringify(this.recipes));
         }

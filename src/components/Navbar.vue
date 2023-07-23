@@ -55,14 +55,14 @@
               Dropdown
             </a>
             <div class="dropdown-menu">
-              <router-link class="dropdown-item" :to="{ name: 'createRecipe' }">
-                createRecipe
+              <router-link class="dropdown-item" :to="{ name: 'favoriteRecipes' }">
+                Favorite Recipes
               </router-link>
-              <router-link class="dropdown-item" :to="{ name: 'route2' }">
-                Route 2
+              <router-link class="dropdown-item" :to="{ name: 'myRecipes' }">
+                My Recipes
               </router-link>
-              <router-link class="dropdown-item" :to="{ name: 'route3' }">
-                Route 3
+              <router-link class="dropdown-item" :to="{ name: 'familyRecipes' }">
+                Family Recipes
               </router-link>
             </div>
           </li>

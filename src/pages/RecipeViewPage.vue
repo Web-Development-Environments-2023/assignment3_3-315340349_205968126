@@ -112,6 +112,7 @@ export default {
         ingredients,
         steps,
       };
+      // _recipe.image = this.$route.params.image;
 
       this.recipe = _recipe;
     } catch (error) {
