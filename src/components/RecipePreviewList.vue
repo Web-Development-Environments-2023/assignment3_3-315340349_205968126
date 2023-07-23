@@ -4,6 +4,14 @@
       {{ title }}:
       <slot></slot>
     </h1>
+    <div v-if="responsiveGrid" class="sort-buttons">
+      <b-button @click="sortByPopularity" variant="primary">
+        <i class="fas fa-arrow-up"></i>
+      </b-button>
+      <b-button @click="sortByReadyInMinutes" variant="primary">
+        <i class="far fa-clock"></i>
+      </b-button>
+    </div>
     <b-row v-if="responsiveGrid">
       <b-col v-for="r in recipes" :key="r.id" :lg="colSize" :md="colSize" :sm="12">
         <RecipePreview class="recipePreview"
@@ -69,6 +77,7 @@ export default {
       recipes: [],
       myRecipe: this.routeName=="/users/myRecipes" || this.routeName=="/users/myFamilyRecipes",
       colSize: 4, // Number of columns for RecipePreview (default is 4)
+      sortBy: null,
     };
   },
   mounted() {
@@ -83,6 +92,25 @@ export default {
     }
   },
   methods: {
+    sortByPopularity() {
+      this.sortBy = "popularity";
+      this.sortRecipes();
+    },
+
+    // Method to sort recipes by readyInMinutes
+    sortByReadyInMinutes() {
+      this.sortBy = "readyInMinutes";
+      this.sortRecipes();
+    },
+
+    // Method to sort the recipes based on the selected sorting option
+    sortRecipes() {
+      if (this.sortBy === "popularity") {
+        this.recipes.sort((a, b) => b.popularity - a.popularity);
+      } else if (this.sortBy === "readyInMinutes") {
+        this.recipes.sort((a, b) => a.readyInMinutes - b.readyInMinutes);
+      }
+    },
     async updateRecipes() {
       try {
         // console.log("Hiiiiiiiiii");
@@ -104,10 +132,13 @@ export default {
           recipe.isFavorite = response.data.isFavorite;
           recipe.isWatched = response.data.isWatched;
         }
+        if (this.sortBy === "popularity") {
+          this.recipes.sort((a, b) => b.popularity - a.popularity);
+        } else if (this.sortBy === "readyInMinutes") {
+          this.recipes.sort((a, b) => a.readyInMinutes - b.readyInMinutes);
+        }
         this.recipes = recipes;
-        console.log("this.recipes", this.recipes);
-        // this.recipes = [];
-        // this.recipes.push(...recipes);
+
         if (this.useLocalStorage) {
           localStorage.setItem("searchResults", JSON.stringify(this.recipes));
         }
@@ -149,5 +180,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// Add any necessary styles here
+.sort-buttons {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  margin-top: -30px; /* Adjust this value to control the vertical position */
+}
+
+.sort-button {
+  background-color: transparent;
+  border: none;
+  color: #007bff; /* Set the desired text color for the buttons */
+  font-size: 16px;
+  cursor: pointer;
+  margin-left: 10px; /* Adjust this value to control the horizontal spacing between buttons */
+}
+
+.sort-button i {
+  margin-right: 5px; /* Adjust this value to control the space between the icon and text */
+}
 </style>

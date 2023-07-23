@@ -107,12 +107,14 @@ export default {
 </script>
 <style scoped>
 .card-container {
+  width: 360px;
   border: 1px solid #ddd;
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   background-image: linear-gradient(to top, #feada6 0%, #f5efef 100%);
   margin-bottom: 15px;
+  /* box-sizing: border-box; */
 }
 
 .recipe-preview {
@@ -152,6 +154,8 @@ export default {
 
 .card-info {
   padding: 10px;
+  font-size: 15px;
+  
 }
 
 .card-details {
@@ -164,6 +168,8 @@ export default {
 .card-detail {
   display: flex;
   align-items: center;
+  /* Add some spacing between icons and text */
+  margin-bottom: 5px; /* Adjust this value to your preference */
 }
 
 .card-detail i {
@@ -183,5 +189,18 @@ export default {
   background: transparent;
   border: none;
   padding: 0;
+  /* Add transition for smooth hover effect */
+  transition: transform 0.2s ease;
+}
+
+.favorite-button:hover {
+  /* Scale up the icon when hovering to create the effect of a full heart */
+  transform: scale(1.2);
+  border: none;
+}
+
+.favorite-button:focus {
+  /* Prevent the button from getting highlighted when focused */
+  outline: none;
 }
 </style>
