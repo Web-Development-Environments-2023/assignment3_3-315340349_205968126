@@ -1,7 +1,11 @@
 <template>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <router-link class="navbar-brand" :to="{ name: 'main' }">
-        Vue Recipes
+        <img
+        src="@/assets/logo.png"
+        alt="Cooking Logo"
+        style="height: 40px; width: auto; filter: brightness(0) invert(1);"
+      />
       </router-link>
       <button
         class="navbar-toggler"
@@ -35,6 +39,16 @@
             <router-link class="nav-link" :to="{ name: 'login' }">
               Login
             </router-link>
+          </li>
+          <li v-if="$root.store.username" class="nav-item">
+            <a
+              class="nav-link"
+              href="#"
+              data-toggle="modal"
+              data-target="#exampleModal"
+            >
+              Open Modal Form
+            </a>
           </li>
           <li class="nav-item dropdown" v-if="$root.store.username">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

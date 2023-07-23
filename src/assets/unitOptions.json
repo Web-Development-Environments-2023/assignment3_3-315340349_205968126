@@ -1,0 +1,29 @@
+{
+    "units": [
+      "grams",
+      "kilograms",
+      "milligrams",
+      "ounces",
+      "pounds",
+      "liters",
+      "milliliters",
+      "teaspoons",
+      "tablespoons",
+      "cups",
+      "fluid ounces",
+      "pints",
+      "quarts",
+      "gallons",
+      "pieces",
+      "slices",
+      "packages",
+      "bunches",
+      "sprigs",
+      "cloves",
+      "pinches",
+      "dash",
+      "to taste",
+      "other"
+    ]
+  }
+  

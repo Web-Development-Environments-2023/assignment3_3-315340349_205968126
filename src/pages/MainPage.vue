@@ -9,6 +9,7 @@
             title="Explore this recipes"
             class="RandomRecipes"
             routeName = "/recipes/getRandoms"
+            :responsiveGrid="false"
           />
           <button @click="$refs.randomRecipe.updateRecipes()">
             New Random Recipes
@@ -21,8 +22,8 @@
             ref="lastViewed"
             title="Last Viewed Recipes"
             class="LastViewedRecipes"
-            
             routeName = "/users/getLastWatched"
+            :responsiveGrid="false"
           ></RecipePreviewList>
           <LoginPage v-if="!$root.store.username"></LoginPage>
         </b-col>

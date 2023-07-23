@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid m-0 p-0" id="test">
     <div id='search-page' class="full-height p-4">
-      <div class="card">
+      <div class="card" id="main-card">
         <h1>Search Page</h1>
         <div class="row">
           <div class="input-group mb-3">
@@ -171,6 +171,19 @@ export default {
 
 .form-check-inline .form-check-input {
   margin-right: 5px;
+}
+
+#main-card{
+  background-image: linear-gradient(to top, #e6b980 0%, #eacda3 100%);
+}
+
+.advanced {
+  color: white
+}
+
+h1{
+  color: white;
+  font-weight: bold;
 }
 
 </style>
