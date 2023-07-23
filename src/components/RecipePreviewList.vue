@@ -1,61 +1,153 @@
 <template>
   <b-container>
-    <h3>
+    <h1>
       {{ title }}:
       <slot></slot>
-    </h3>
-    <b-row>
-      <b-col v-for="r in recipes" :key="r.id">
-        <RecipePreview class="recipePreview" :recipe="r" />
+    </h1>
+    <b-row v-if="responsiveGrid">
+      <b-col v-for="r in recipes" :key="r.id" :lg="colSize" :md="colSize" :sm="12">
+        <RecipePreview class="recipePreview"
+          :recipe="r"
+          :title="title" 
+          :route_name="routeName"
+          :my_recipe="myRecipe"/>
       </b-col>
     </b-row>
+    <b-row v-else>
+      <b-col v-for="r in recipes" :key="r.id" :sm="12">
+        <RecipePreview class="recipePreview" 
+          :recipe="r"
+          :title="title" 
+          :route_name="routeName"
+          :my_recipe="myRecipe"/>
+      </b-col>
+      </b-row>
   </b-container>
 </template>
 
 <script>
 import RecipePreview from "./RecipePreview.vue";
+import axios from "axios";
+
 export default {
   name: "RecipePreviewList",
   components: {
-    RecipePreview
+    RecipePreview,
   },
   props: {
     title: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
+    routeName: {
+      type: String,
+      required: true,
+    },
+    filters: {
+      type: Object,
+      default: () => ({}),
+      required: false,
+    },
+    useLocalStorage: {
+      type: Boolean,
+      default: false,
+      required: false,
+    },
+    searchResults: {
+      type: Array,
+      required: false,
+      default: () => [],
+    },
+    responsiveGrid: {
+      type: Boolean,
+      default: true,
+      required: false,
+    },
   },
   data() {
     return {
-      recipes: []
+      recipes: [],
+      myRecipe: this.routeName=="/users/myRecipes" || this.routeName=="/users/myFamilyRecipes",
+      colSize: 4, // Number of columns for RecipePreview (default is 4)
     };
   },
   mounted() {
-    this.updateRecipes();
+    if (this.useLocalStorage) {
+      const savedResults = localStorage.getItem("searchResults");
+      this.recipes = this.searchResults; // Use the provided searchResults from localStorage
+      if (savedResults) {
+        this.recipes = JSON.parse(savedResults);
+      }
+    } else {
+      this.updateRecipes();
+    }
   },
   methods: {
     async updateRecipes() {
       try {
+        // console.log("Hiiiiiiiiii");
+        // console.log(this.$root.store.server_domain + this.routeName);
         const response = await this.axios.get(
-          this.$root.store.server_domain + "/recipes/random",
-          // "https://test-for-3-2.herokuapp.com/recipes/random"
+          this.$root.store.server_domain + this.routeName,
+          {
+            params: this.filters,
+          }
         );
+        const recipes = response.data;
 
-        // console.log(response);
-        const recipes = response.data.recipes;
-        this.recipes = [];
-        this.recipes.push(...recipes);
-        // console.log(this.recipes);
+        for (const recipe of recipes) {
+          // Fetch isFavorite and isWatched values for each recipe
+          const recipeId = recipe.id;
+          const response = await axios.get(
+            `${this.$root.store.server_domain}/users/favoriteandWatched/${recipeId}`
+          );
+          recipe.isFavorite = response.data.isFavorite;
+          recipe.isWatched = response.data.isWatched;
+        }
+        this.recipes = recipes;
+        console.log("this.recipes", this.recipes);
+        // this.recipes = [];
+        // this.recipes.push(...recipes);
+        if (this.useLocalStorage) {
+          localStorage.setItem("searchResults", JSON.stringify(this.recipes));
+        }
       } catch (error) {
         console.log(error);
+        console.log(this.$root.store.server_domain, this.routeName);
       }
-    }
-  }
+    },
+
+    // Adjust colSize based on screen width (you can fine-tune these values as needed)
+    adjustColSize() {
+      if (window.innerWidth < 768) {
+        this.colSize = 12; // On small screens (e.g., smartphones), display one RecipePreview per row
+      } else if (window.innerWidth < 992) {
+        this.colSize = 6; // On medium screens (e.g., tablets), display two RecipePreviews per row
+      } else {
+        this.colSize = 4; // On large screens (e.g., desktops), display three RecipePreviews per row
+      }
+    },
+  },
+  watch: {
+    filters: {
+      handler() {
+        this.updateRecipes();
+      },
+      deep: true,
+    },
+  },
+  created() {
+    this.adjustColSize();
+    // Recalculate colSize when the window is resized
+    window.addEventListener("resize", this.adjustColSize);
+  },
+  beforeDestroy() {
+    // Remove the event listener when the component is destroyed to avoid memory leaks
+    window.removeEventListener("resize", this.adjustColSize);
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-.container {
-  min-height: 400px;
-}
+// Add any necessary styles here
 </style>
